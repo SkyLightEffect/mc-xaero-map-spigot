@@ -1,5 +1,4 @@
 plugins {
-    id 'kr.entree.spigradle' version '2.4.2'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
@@ -8,9 +7,14 @@ group = project.property("group")
 version = project.property("version")
 
 repositories {
+
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+
     mavenLocal()
     mavenCentral()
-    spigot()
     maven {
         name = 'spigotmc-repo'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -23,23 +27,10 @@ repositories {
 
 dependencies {
     implementation 'org.bstats:bstats-bukkit:3.0.0'
-    compileOnly spigot(project.property("spigotApiVersion"))
-}
-
-spigot {
-    name = project.property("pluginName")
-    authors = project.property("authors").split("\\s*,\\s*")
-    apiVersion = project.property("spigotApiVersion")
-    load = STARTUP
-    foliaSupported = true
-    debug {
-        eula = true
-        buildVersion = project.property("mcVersion")
-    }
+    compileOnly "io.papermc.paper:paper-api:${project.property("paperApiVersion")}"
 }
 
 shadowJar {
-    //archiveClassifier.set("")
     relocate 'org.bstats', 'dev.chaws.xaero.map.spigot'
 }
 
@@ -63,12 +54,13 @@ tasks {
     assemble.dependsOn(shadowJar)
 }
 
-// Not sure why this is needed to debug
-// https://github.com/spigradle/spigradle/issues/84
-//tasks.withType(Copy).all { duplicatesStrategy 'exclude' }
-
 processResources {
-    def props = [version: version]
+    def props = [
+            version: version,
+            pluginName: project.property("pluginName"),
+            authors: project.property("authors"),
+            apiVersion: project.property("pluginApiVersion")
+    ]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
