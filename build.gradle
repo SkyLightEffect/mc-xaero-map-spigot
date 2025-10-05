@@ -31,6 +31,7 @@ spigot {
     authors = project.property("authors").split("\\s*,\\s*")
     apiVersion = project.property("spigotApiVersion")
     load = STARTUP
+    foliaSupported = true
     debug {
         eula = true
         buildVersion = project.property("mcVersion")
