@@ -1,0 +1,7 @@
+name: ${pluginName}
+main: dev.chaws.xaero.map.spigot.XaeroMapPlugin
+version: ${version}
+authors: [${authors}]
+api-version: '${apiVersion}'
+
+folia-supported: true
